@@ -47,20 +47,6 @@ export class Maze {
         this.context.fillRect(0, 0, width, height)
     }
 
-    private __grawBorder() {
-        // 绘制边框
-        this.context.fillStyle = this.options.grid.lineStyle.color
-        const { width, height } = this.size
-        const { row, col } = this.options.grid.size
-        const lineWidth = this.options.grid.lineStyle.width // 线条宽度
-        for (let i = 0; i < row + 1; i++) {
-            this.context.fillRect(this.__converCoordinates(i, 0).x, 0, lineWidth, height)
-        }
-        for (let j = 0; j < col + 1; j++) {
-            this.context.fillRect(0, this.__converCoordinates(0, j).y, width, lineWidth)
-        }
-    }
-
     /**
      * 将格点转换为画布坐标
      * @param x
@@ -75,6 +61,20 @@ export class Maze {
         return {
             x: x * (lineWidth + cellWidth),
             y: y * (lineWidth + cellHeight),
+        }
+    }
+
+    private __grawBorder() {
+        // 绘制边框
+        this.context.fillStyle = this.options.grid.lineStyle.color
+        const { width, height } = this.size
+        const { row, col } = this.options.grid.size
+        const lineWidth = this.options.grid.lineStyle.width // 线条宽度
+        for (let i = 0; i < row + 1; i++) {
+            this.context.fillRect(this.__converCoordinates(i, 0).x, 0, lineWidth, height)
+        }
+        for (let j = 0; j < col + 1; j++) {
+            this.context.fillRect(0, this.__converCoordinates(0, j).y, width, lineWidth)
         }
     }
 
