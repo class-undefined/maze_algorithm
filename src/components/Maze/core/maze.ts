@@ -52,19 +52,30 @@ export class Maze {
         this.context.fillStyle = this.options.grid.lineStyle.color
         const { width, height } = this.size
         const { row, col } = this.options.grid.size
-        const cellWidth = this.options.grid.unit.width
-        const cellHeight = this.options.grid.unit.height
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
         for (let i = 0; i < row + 1; i++) {
-            this.context.fillRect(i * (lineWidth + cellWidth), 0, lineWidth, height)
+            this.context.fillRect(this.__converCoordinates(i, 0).x, 0, lineWidth, height)
         }
         for (let j = 0; j < col + 1; j++) {
-            this.context.fillRect(0, j * (lineWidth + cellHeight), width, lineWidth)
+            this.context.fillRect(0, this.__converCoordinates(0, j).y, width, lineWidth)
         }
     }
 
+    /**
+     * 将格点转换为画布坐标
+     * @param x
+     * @param y
+     * @returns
+     */
     private __converCoordinates(x: number, y: number) {
         // 从格点坐标转换成画布坐标系
+        const lineWidth = this.options.grid.lineStyle.width
+        const cellWidth = this.options.grid.unit.width
+        const cellHeight = this.options.grid.unit.height
+        return {
+            x: x * (lineWidth + cellWidth),
+            y: y * (lineWidth + cellHeight),
+        }
     }
 
     private __drawGrid() {
