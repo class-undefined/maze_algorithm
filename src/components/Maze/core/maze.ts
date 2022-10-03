@@ -1,22 +1,25 @@
 import { MazeStyleOptions } from "./options"
 import { defaultMazeOptions } from "./options.default"
-
+import { Application, Container, Graphics } from "pixi.js"
+import { hex2digital } from "./utils"
+import { Rect } from "./utils/pixi/rect"
 export class Maze {
-    private canvas: HTMLCanvasElement
+    private app: Application
     private options: MazeStyleOptions
-    private context: CanvasRenderingContext2D
+    private gridContainer: Container // 网格
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
+        const { width, height } = this.size
+        this.app = new Application({
+            view: teleport.tagName === "CANVAS" ? teleport : undefined,
+            width,
+            height,
+            backgroundColor: hex2digital(this.options.grid.backGroundColor),
+        })
+        this.gridContainer = new Container()
 
-        if (teleport.tagName === "CANVAS") this.canvas = teleport
-        else {
-            const canvas = document.createElement("canvas")
-            teleport.appendChild(canvas)
-            this.canvas = canvas
-        }
-        this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D
-        this.__initOptions()
-        this.__drawGrid()
+        this.app.stage.addChild(this.gridContainer)
+        this.__initGrid()
     }
 
     /**
@@ -38,14 +41,14 @@ export class Maze {
         }
     }
 
-    private __initOptions() {
-        // 初始化画布尺寸
-        const { width, height } = this.size
-        this.canvas.width = width
-        this.canvas.height = height
-        this.context.fillStyle = this.options.grid.backGroundColor
-        this.context.fillRect(0, 0, width, height)
-    }
+    // private __initOptions() {
+    //     // 初始化画布尺寸
+    //     const { width, height } = this.size
+    //     this.canvas.width = width
+    //     this.canvas.height = height
+    //     this.context.fillStyle = this.options.grid.backGroundColor
+    //     this.context.fillRect(0, 0, width, height)
+    // }
 
     /**
      * 将格点转换为画布坐标
@@ -66,19 +69,38 @@ export class Maze {
 
     private __grawBorder() {
         // 绘制边框
-        this.context.fillStyle = this.options.grid.lineStyle.color
         const { width, height } = this.size
+        const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
+        const color = this.options.grid.lineStyle.color
         const { row, col } = this.options.grid.size
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
         for (let i = 0; i < row + 1; i++) {
-            this.context.fillRect(this.__converCoordinates(i, 0).x, 0, lineWidth, height)
+            const rect = new Rect(
+                this.__converCoordinates(i, 0).x,
+                0,
+                lineWidth,
+                height,
+                color
+            ).toGraphics()
+            grid.addChild(rect)
         }
         for (let j = 0; j < col + 1; j++) {
-            this.context.fillRect(0, this.__converCoordinates(0, j).y, width, lineWidth)
+            const rect = new Rect(
+                0,
+                this.__converCoordinates(0, j).y,
+                width,
+                lineWidth,
+                color
+            ).toGraphics()
+            grid.addChild(rect)
         }
+        this.gridContainer.addChild(grid)
     }
 
-    private __drawGrid() {
+    private __initGrid() {
+        const { width, height } = this.size
+        this.gridContainer.width = width
+        this.gridContainer.height = height
         this.__grawBorder()
     }
 }
