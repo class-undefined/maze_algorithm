@@ -7,7 +7,7 @@ export const enum Cell {
 export type Pos = [number, number]
 
 /** 网格接口 */
-export interface MazeGrid {
+export interface Grid {
     board: Cell[][]
 
     render(): void
@@ -17,4 +17,4 @@ export interface MazeGrid {
     neighbors(cell: Cell): Cell[]
 }
 /** 寻路算法 */
-export type MazeAlgorithm = (grid: MazeGrid, source: Pos, target: Pos) => void
+export type MazeAlgorithm = (grid: Grid, source: Pos, target: Pos) => void
