@@ -3,11 +3,13 @@ import { defaultMazeOptions } from "./options.default"
 import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
 import { Rect } from "./utils/pixi/rect"
+import { Grid } from "./types"
 export class Maze {
     private app: Application // 主容器, 填装网格容器
     private gridContainer: Container // 网格容器, 用于承载棋盘
     private board: Container // 棋盘, 用于填充矩形
     private options: MazeStyleOptions
+    private grid?: Grid
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
@@ -32,8 +34,15 @@ export class Maze {
     public static from(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         return new Maze(teleport, options)
     }
+
     public getOptison(): Readonly<MazeStyleOptions> {
         return this.options
+    }
+
+    /** 绑定算法格点 */
+    public bindGrid(grid: Grid) {
+        this.grid = grid
+        return this
     }
 
     public get size() {

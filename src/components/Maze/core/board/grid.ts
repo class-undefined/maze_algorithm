@@ -19,6 +19,11 @@ export class MazeGrid implements Grid {
             this.board[i] = col
         }
     }
+
+    search(source: Pos, target: Pos): Cell[] | null {
+        return []
+    }
+
     render(): void {
         throw new Error("Method not implemented.")
     }
@@ -27,15 +32,15 @@ export class MazeGrid implements Grid {
         return this.board[pos[0]][pos[1]].passable
     }
 
-    neighbors(pos: Pos): Cell[] {
-        const list = []
+    neighbors(pos: Pos): Pos[] {
+        const list: Pos[] = []
         const { size } = this.maze.getOptison().grid
         for (const [dx, dy] of this.directions) {
             const x = dx + pos[0]
-            const y = dx + pos[1]
+            const y = dy + pos[1]
             if (x < 0 || y < 0 || x >= size || y >= size) continue //跳过超出边界的坐标
             if (!this.board[x][y].passable) continue
-            list.push(this.board[x][y])
+            list.push([dx, dy])
         }
         return list
     }

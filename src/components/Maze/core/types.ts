@@ -22,7 +22,13 @@ export interface Grid {
     passable(pos: Pos): boolean
 
     /** 与位于`pos`位置相邻的`Cell` */
-    neighbors(pos: Pos): Cell[]
+    neighbors(pos: Pos): Pos[]
+
+    search: (source: Pos, target: Pos) => Cell[] | null
 }
 /** 寻路算法 */
-export type MazeAlgorithm = (grid: Grid, source: Pos, target: Pos) => void
+export type MazeAlgorithm = (
+    grid: Grid,
+    source: Pos,
+    target: Pos
+) => Map<Pos, Pos | undefined> | null
