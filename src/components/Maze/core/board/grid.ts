@@ -1,9 +1,9 @@
 import { bfsSearch } from "../algorithms/bfs"
 import { getPath } from "../algorithms/common"
-import { Cell, Grid, Pos, Algorithm } from "../types"
+import { Cell, AlgorithmEngine, Pos, Algorithm } from "../types"
 import { MazeCell } from "./cell"
 
-export class MazeGrid implements Grid {
+export class MazeGrid implements AlgorithmEngine {
     public board: Cell[][]
     private directions: number[][] = [
         [0, -1],

@@ -1,6 +1,6 @@
-import { Grid, MazeAlgorithm, Pos } from "../types"
+import { AlgorithmEngine, MazeAlgorithm, Pos } from "../types"
 
-export const bfsSearch: MazeAlgorithm = (grid: Grid, source: Pos, target: Pos) => {
+export const bfsSearch: MazeAlgorithm = (grid: AlgorithmEngine, source: Pos, target: Pos) => {
     const queue = [source]
     const visited = new Set<string>()
     const path = new Map<string, Pos | undefined>()

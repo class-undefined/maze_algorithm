@@ -3,14 +3,17 @@ import { defaultMazeOptions } from "./options.default"
 import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
 import { Rect } from "./utils/pixi/rect"
-import { Algorithm, Grid, Pos } from "./types"
+import { Algorithm, AlgorithmEngine, Pos } from "./types"
 import { getPath } from "./algorithms/common"
+import { BorderEventSystem } from "./event"
 export class Maze {
     private app: Application // 主容器, 填装网格容器
     private gridContainer: Container // 网格容器, 用于承载棋盘
+    private grid: Graphics // 棋盘坐标
     private board: Container // 棋盘, 用于填充矩形
     private options: MazeStyleOptions
-    private grid?: Grid
+    private algoEngine?: AlgorithmEngine // 算法引擎
+    private event: BorderEventSystem
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
@@ -25,8 +28,9 @@ export class Maze {
         this.gridContainer = new Container()
         this.board = new Container()
         this.board.pivot = { x: -padding, y: -padding }
-        this.gridContainer.addChild(this.board)
+        this.grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
         this.app.stage.addChild(this.gridContainer)
+        this.event = BorderEventSystem.from(this.grid, this.options).enable()
         this.__initGrid()
     }
 
@@ -42,8 +46,8 @@ export class Maze {
     }
 
     /** 绑定算法格点 */
-    public bindGrid(grid: Grid) {
-        this.grid = grid
+    public bindGrid(grid: AlgorithmEngine) {
+        this.algoEngine = grid
         return this
     }
 
@@ -91,13 +95,6 @@ export class Maze {
      */
     private __drawBoard() {
         const { width, height } = this.size
-        const { padding } = this.options.grid
-        // grid: 棋盘网格
-        const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
-        grid.pivot = { x: -padding, y: -padding }
-        this.board.addChild(grid)
-        this.gridContainer.addChild(grid)
-        this.gridContainer.addChild(this.board)
         const color = this.options.grid.lineStyle.color //线条颜色
         const n = this.options.grid.size // 棋盘尺寸
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
@@ -118,8 +115,8 @@ export class Maze {
             const text = new Text(i.toString(), style)
             text.x = -15
             text.y = y + cellHeight / 3
-            if (i !== n) grid.addChild(text)
-            grid.addChild(line)
+            if (i !== n) this.grid.addChild(text)
+            this.grid.addChild(line)
         }
         // 竖直线
         for (let j = 0; j < n + 1; j++) {
@@ -131,8 +128,8 @@ export class Maze {
             const text = new Text(j.toString(), style)
             text.x = x + cellWidth / 3
             text.y = -19
-            if (j !== n) grid.addChild(text) // 0只添加一次
-            grid.addChild(line)
+            if (j !== n) this.grid.addChild(text) // 0只添加一次
+            this.grid.addChild(line)
         }
     }
 
@@ -150,18 +147,21 @@ export class Maze {
                 this.options.grid.backGroundColor
             ).toGraphics()
         )
+        this.grid.pivot = { x: -padding, y: -padding }
+        this.gridContainer.addChild(this.grid)
+        this.gridContainer.addChild(this.board)
         this.__drawBoard()
     }
 
     /** 清空棋盘 */
     public clearBoard() {
         this.board.removeChildren()
-        this.grid?.clear()
+        this.algoEngine?.clear()
     }
 
     public search(source: Pos, target: Pos, type: Algorithm = "bfs") {
-        if (!this.grid) throw "尚未载入格点搜索系统 Grid class"
-        const pathBacktrack = this.grid.search(source, target, type)
+        if (!this.algoEngine) throw "尚未载入格点搜索系统 Grid class"
+        const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         path?.forEach(([x, y]) => {
             this.__drawRect(x, y, "#15416F")

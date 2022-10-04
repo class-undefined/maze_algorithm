@@ -20,7 +20,7 @@ export type PathBackTrack = Map<string, Pos | undefined> | null
 export type Path = Pos[]
 
 /** 网格接口 */
-export interface Grid {
+export interface AlgorithmEngine {
     board: Cell[][]
 
     /** 清空棋盘 */
@@ -37,4 +37,4 @@ export interface Grid {
     search: (source: Pos, target: Pos, type?: Algorithm) => PathBackTrack
 }
 /** 寻路算法 */
-export type MazeAlgorithm = (grid: Grid, source: Pos, target: Pos) => PathBackTrack
+export type MazeAlgorithm = (engine: AlgorithmEngine, source: Pos, target: Pos) => PathBackTrack
