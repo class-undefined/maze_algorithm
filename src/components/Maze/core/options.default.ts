@@ -5,7 +5,7 @@ export const DefaultGrid: GridOptions = {
         width: 40,
         height: 40,
     },
-    size: 25,
+    size: 10,
     backGroundColor: "#23272e",
     lineStyle: {
         width: 2,

@@ -1,5 +1,5 @@
 import { bfsSearch } from "../algorithms/bfs"
-import { Maze } from "../maze"
+import { getPath } from "../algorithms/common"
 import { Cell, Grid, Pos, Algorithm } from "../types"
 import { MazeCell } from "./cell"
 
@@ -20,7 +20,7 @@ export class MazeGrid implements Grid {
         }
     }
 
-    search(source: Pos, target: Pos, type: Algorithm = "bfs"): Map<Pos, Pos | undefined> | null {
+    search(source: Pos, target: Pos, type: Algorithm = "bfs"): Map<string, Pos | undefined> | null {
         switch (type) {
             case "bfs": {
                 return bfsSearch(this, source, target)
@@ -44,8 +44,17 @@ export class MazeGrid implements Grid {
             const y = dy + pos[1]
             if (x < 0 || y < 0 || x >= this.size || y >= this.size) continue //跳过超出边界的坐标
             if (!this.board[x][y].passable) continue
-            list.push([dx, dy])
+            list.push([x, y])
         }
         return list
     }
+}
+
+if (import.meta.vitest) {
+    const { it, expect } = import.meta.vitest
+    it("bfs", () => {
+        const mazeGrid = new MazeGrid(10)
+        const path = mazeGrid.search([0, 0], [5, 4])
+        console.log(getPath(path, [5, 4]))
+    })
 }
