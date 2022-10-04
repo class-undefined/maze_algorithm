@@ -6,7 +6,7 @@ export class MazeCell implements Cell {
     private statuStack: Cell[]
     constructor(passable?: boolean, type?: CellType) {
         this.passable = passable ?? true
-        this.type = type ?? CellType.Road
+        this.type = type ?? CellType.Blank
         this.statuStack = [{ passable: this.passable, type: this.type }]
     }
 
@@ -16,6 +16,10 @@ export class MazeCell implements Cell {
         this.type = type ?? this.type
         this.statuStack.push({ passable: this.passable, type: this.type })
         return this
+    }
+
+    public static Blank() {
+        return new MazeCell(true, CellType.Blank)
     }
 
     public static Road() {

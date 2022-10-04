@@ -15,8 +15,17 @@ export class MazeGrid implements Grid {
         this.board = new Array<Cell[]>(this.size)
         for (let i = 0; i < this.size; i++) {
             const col = new Array(this.size)
-            for (let j = 0; j < this.size; j++) col[j] = MazeCell.Road()
+            for (let j = 0; j < this.size; j++) col[j] = MazeCell.Blank()
             this.board[i] = col
+        }
+    }
+
+    /** 清空棋盘 */
+    clear(): void {
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                this.board[i][j] = MazeCell.Blank()
+            }
         }
     }
 

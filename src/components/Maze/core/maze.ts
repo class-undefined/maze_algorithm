@@ -3,7 +3,8 @@ import { defaultMazeOptions } from "./options.default"
 import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
 import { Rect } from "./utils/pixi/rect"
-import { Grid } from "./types"
+import { Algorithm, Grid, Pos } from "./types"
+import { getPath } from "./algorithms/common"
 export class Maze {
     private app: Application // 主容器, 填装网格容器
     private gridContainer: Container // 网格容器, 用于承载棋盘
@@ -56,32 +57,6 @@ export class Maze {
         }
     }
 
-    // private __initOptions() {
-    //     // 初始化画布尺寸
-    //     const { width, height } = this.size
-    //     this.canvas.width = width
-    //     this.canvas.height = height
-    //     this.context.fillStyle = this.options.grid.backGroundColor
-    //     this.context.fillRect(0, 0, width, height)
-    // }
-
-    /**
-     * 将格点转换为画布坐标
-     * @param x
-     * @param y
-     * @returns
-     */
-    private __converCoordinates(x: number, y: number) {
-        // 从格点坐标转换成画布坐标系
-        const lineWidth = this.options.grid.lineStyle.width
-        const cellWidth = this.options.grid.unit.width
-        const cellHeight = this.options.grid.unit.height
-        return {
-            x: x * (lineWidth + cellWidth),
-            y: y * (lineWidth + cellHeight),
-        }
-    }
-
     /**
      * 构造网格基本矩形单元
      * @param rowIndex 网格横轴索引
@@ -100,20 +75,33 @@ export class Maze {
     }
 
     /**
+     * 在棋盘上绘制矩形
+     * @param rowIndex 网格横轴索引
+     * @param colIndex 网格纵轴索引
+     * @param color 矩形颜色
+     */
+    private __drawRect(rowIndex: number, colIndex: number, color?: string) {
+        const graphic = this.__generateRect(rowIndex, colIndex, color)
+        this.board.addChild(graphic)
+    }
+
+    /**
      * 绘制棋盘
      */
     private __drawBoard() {
         const { width, height } = this.size
-        // 绘制棋盘背景
+        const { padding } = this.options.grid
+        // grid: 棋盘网格
         const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
+        grid.pivot = { x: -padding, y: -padding }
         this.board.addChild(grid)
+        this.gridContainer.addChild(grid)
         this.gridContainer.addChild(this.board)
         const color = this.options.grid.lineStyle.color //线条颜色
         const n = this.options.grid.size // 棋盘尺寸
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
         const cellWidth = this.options.grid.unit.width
         const cellHeight = this.options.grid.unit.height
-        const { padding } = this.options.grid
         // 刻度文字样式
         const style = new TextStyle({
             fontSize: 10,
@@ -145,9 +133,6 @@ export class Maze {
             if (j !== n) grid.addChild(text) // 0只添加一次
             grid.addChild(line)
         }
-
-        const rect = this.__generateRect(21, 5, "#ffffff")
-        this.board.addChild(rect)
     }
 
     private __initGrid() {
@@ -165,5 +150,20 @@ export class Maze {
             ).toGraphics()
         )
         this.__drawBoard()
+    }
+
+    /** 清空棋盘 */
+    public clearBoard() {
+        this.board.removeChildren()
+        this.grid?.clear()
+    }
+
+    public search(source: Pos, target: Pos, type: Algorithm = "bfs") {
+        if (!this.grid) throw "尚未载入格点搜索系统 Grid class"
+        const pathBacktrack = this.grid.search(source, target, type)
+        const path = getPath(pathBacktrack, target)
+        path?.forEach(([x, y]) => {
+            this.__drawRect(x, y, "#15416F")
+        })
     }
 }
