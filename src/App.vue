@@ -9,6 +9,9 @@ import maze from "./components/Maze/maze.vue"
 </template>
 
 <style>
+* {
+    margin: 0;
+}
 body {
     background-color: #23272e;
 }

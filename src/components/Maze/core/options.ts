@@ -5,12 +5,8 @@ export type GridOptions = {
         /** 一个矩形的长度 */
         height: number
     }
-    size: {
-        /** 一行 row 个矩形 */
-        row: number
-        /** 一列 col 个矩形 */
-        col: number
-    }
+    /** size * size个矩形 */
+    size: number
     lineStyle: {
         /** 网格线宽度 */
         width: number

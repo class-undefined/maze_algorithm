@@ -1,6 +1,6 @@
 import { MazeStyleOptions } from "./options"
 import { defaultMazeOptions } from "./options.default"
-import { Application, Container, Graphics } from "pixi.js"
+import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
 import { Rect } from "./utils/pixi/rect"
 export class Maze {
@@ -12,8 +12,8 @@ export class Maze {
         const { width, height } = this.size
         this.app = new Application({
             view: teleport.tagName === "CANVAS" ? teleport : undefined,
-            width: width + 20,
-            height: height + 20,
+            width: width + 40,
+            height: height + 40,
             backgroundColor: hex2digital(this.options.grid.backGroundColor),
         })
         this.gridContainer = new Container()
@@ -30,14 +30,13 @@ export class Maze {
     }
 
     public get size() {
-        const { row, col } = this.options.grid.size
+        const n = this.options.grid.size
         const { width, height } = this.options.grid.unit
         const spacing = this.options.grid.lineStyle.width
-        const widthBuff = (row + 1) * spacing
-        const heightBuff = (col + 1) * spacing
+        const buff = n * spacing
         return {
-            width: col * width + widthBuff,
-            height: row * height + heightBuff,
+            width: n * width + buff,
+            height: n * height + buff,
         }
     }
 
@@ -72,28 +71,40 @@ export class Maze {
         const { width, height } = this.size
         const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
         const color = this.options.grid.lineStyle.color
-        const { row, col } = this.options.grid.size
+        const n = this.options.grid.size
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
-        for (let i = 0; i < row + 1; i++) {
-            const rect = new Rect(
-                this.__converCoordinates(i, 0).x,
-                0,
-                lineWidth,
-                height,
-                color
-            ).toGraphics()
-            grid.addChild(rect)
+        const style = new TextStyle({
+            fontSize: 10,
+            fill: "#ffffff",
+        })
+
+        // 水平线
+        for (let i = 0; i < n + 1; i++) {
+            const { x, y } = this.__converCoordinates(0, i)
+            const line = new Graphics()
+            line.lineStyle({ width: lineWidth, color: hex2digital(color) })
+                .moveTo(0, y)
+                .lineTo(width, y)
+            const text = new Text(i.toString(), style)
+            text.x = x
+            text.y = y
+            grid.addChild(line)
+            grid.addChild(text)
         }
-        for (let j = 0; j < col + 1; j++) {
-            const rect = new Rect(
-                0,
-                this.__converCoordinates(0, j).y,
-                width,
-                lineWidth,
-                color
-            ).toGraphics()
-            grid.addChild(rect)
+        // 列
+        for (let j = 0; j < n + 1; j++) {
+            const { x, y } = this.__converCoordinates(j, 0)
+            const line = new Graphics()
+            line.lineStyle({ width: lineWidth, color: hex2digital(color) })
+                .moveTo(x, 0)
+                .lineTo(x, height)
+            const text = new Text(j.toString(), style)
+            text.x = x
+            text.y = y
+            grid.addChild(text)
+            grid.addChild(line)
         }
+
         grid.pivot = { x: -10, y: -10 }
         this.gridContainer.addChild(grid)
     }
@@ -102,7 +113,7 @@ export class Maze {
         const { width, height } = this.size
         this.gridContainer.width = width + 20
         this.gridContainer.height = height + 20
-        this.gridContainer.addChild(new Rect(0, 0, width + 20, height + 20, "#000000").toGraphics())
+        this.gridContainer.addChild(new Rect(0, 0, width + 40, height + 40, "#000000").toGraphics())
         this.__grawBorder()
     }
 }
