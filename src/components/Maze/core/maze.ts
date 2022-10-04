@@ -32,6 +32,9 @@ export class Maze {
     public static from(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         return new Maze(teleport, options)
     }
+    public getOptison(): Readonly<MazeStyleOptions> {
+        return this.options
+    }
 
     public get size() {
         const n = this.options.grid.size
