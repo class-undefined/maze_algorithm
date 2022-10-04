@@ -14,6 +14,8 @@ export type GridOptions = {
         color: string
     }
     backGroundColor: string
+    /** 棋盘外边距 */
+    padding: number
 }
 export type MazeStyleOptions = {
     grid: GridOptions

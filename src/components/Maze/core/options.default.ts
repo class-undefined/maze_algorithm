@@ -11,6 +11,7 @@ export const DefaultGrid: GridOptions = {
         width: 2,
         color: "#458CFF",
     },
+    padding: 20,
 }
 
 export const defaultMazeOptions: MazeStyleOptions = {

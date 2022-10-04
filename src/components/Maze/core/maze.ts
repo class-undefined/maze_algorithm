@@ -10,10 +10,11 @@ export class Maze {
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
+        const { padding } = this.options.grid
         this.app = new Application({
             view: teleport.tagName === "CANVAS" ? teleport : undefined,
-            width: width + 40,
-            height: height + 40,
+            width: width + 2 * padding,
+            height: height + 2 * padding,
             backgroundColor: hex2digital(this.options.grid.backGroundColor),
         })
         this.gridContainer = new Container()
@@ -66,7 +67,7 @@ export class Maze {
         }
     }
 
-    private __grawBorder() {
+    private __drawBorder() {
         // 绘制边框
         const { width, height } = this.size
         const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
@@ -77,7 +78,11 @@ export class Maze {
             fontSize: 10,
             fill: "#ffffff",
         })
-
+        const zero = new Text(0, style)
+        const { padding } = this.options.grid
+        zero.x = -15
+        zero.y = -15
+        grid.addChild(zero)
         // 水平线
         for (let i = 0; i < n + 1; i++) {
             const { x, y } = this.__converCoordinates(0, i)
@@ -86,12 +91,12 @@ export class Maze {
                 .moveTo(0, y)
                 .lineTo(width, y)
             const text = new Text(i.toString(), style)
-            text.x = x
-            text.y = y
+            text.x = x - 15
+            text.y = y - 6
+            if (i !== 0) grid.addChild(text)
             grid.addChild(line)
-            grid.addChild(text)
         }
-        // 列
+        // 竖直线
         for (let j = 0; j < n + 1; j++) {
             const { x, y } = this.__converCoordinates(j, 0)
             const line = new Graphics()
@@ -100,20 +105,29 @@ export class Maze {
                 .lineTo(x, height)
             const text = new Text(j.toString(), style)
             text.x = x
-            text.y = y
-            grid.addChild(text)
+            text.y = y - 15
+            if (j !== 0) grid.addChild(text) // 0只添加一次
             grid.addChild(line)
         }
 
-        grid.pivot = { x: -10, y: -10 }
+        grid.pivot = { x: -padding, y: -padding }
         this.gridContainer.addChild(grid)
     }
 
     private __initGrid() {
         const { width, height } = this.size
-        this.gridContainer.width = width + 20
-        this.gridContainer.height = height + 20
-        this.gridContainer.addChild(new Rect(0, 0, width + 40, height + 40, "#000000").toGraphics())
-        this.__grawBorder()
+        const { padding } = this.options.grid
+        this.gridContainer.width = width + 2 * padding
+        this.gridContainer.height = height + 2 * padding
+        this.gridContainer.addChild(
+            new Rect(
+                0,
+                0,
+                width + 2 * padding,
+                height + 2 * padding,
+                this.options.grid.backGroundColor
+            ).toGraphics()
+        )
+        this.__drawBorder()
     }
 }
