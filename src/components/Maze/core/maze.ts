@@ -20,6 +20,7 @@ export class Maze {
             width: width + 2 * padding,
             height: height + 2 * padding,
             backgroundColor: hex2digital(this.options.grid.backGroundColor),
+            resolution: 1,
         })
         this.gridContainer = new Container()
         this.board = new Container()
@@ -104,7 +105,7 @@ export class Maze {
         const cellHeight = this.options.grid.unit.height
         // 刻度文字样式
         const style = new TextStyle({
-            fontSize: 10,
+            fontSize: 12,
             fill: "#ffffff",
         })
         // 水平线
@@ -129,7 +130,7 @@ export class Maze {
                 .lineTo(x, height)
             const text = new Text(j.toString(), style)
             text.x = x + cellWidth / 3
-            text.y = -15
+            text.y = -19
             if (j !== n) grid.addChild(text) // 0只添加一次
             grid.addChild(line)
         }
