@@ -6,7 +6,7 @@ import { Rect } from "./utils/pixi/rect"
 export class Maze {
     private app: Application
     private options: MazeStyleOptions
-    private gridContainer: Container // 网格
+    private gridContainer: Container // 网格容器
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
@@ -67,50 +67,63 @@ export class Maze {
         }
     }
 
+    private __generateRect(rowIndex: number, colIndex: number, color?: string) {
+        // 从格点坐标转换成画布坐标系
+        const lineWidth = this.options.grid.lineStyle.width
+        const cellWidth = this.options.grid.unit.width
+        const cellHeight = this.options.grid.unit.height
+        const x = lineWidth / 2 + rowIndex * (cellWidth + lineWidth)
+        const y = lineWidth / 2 + colIndex * (cellHeight + lineWidth)
+        console.log(x, y)
+        return new Rect(x, y, cellWidth, cellHeight, color).toGraphics()
+    }
+
     private __drawBorder() {
         // 绘制边框
         const { width, height } = this.size
+        // 绘制棋盘背景
         const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
-        const color = this.options.grid.lineStyle.color
-        const n = this.options.grid.size
+        const color = this.options.grid.lineStyle.color //线条颜色
+        const n = this.options.grid.size // 棋盘尺寸
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
+        const cellWidth = this.options.grid.unit.width
+        const cellHeight = this.options.grid.unit.height
+        const { padding } = this.options.grid
+        // 刻度文字样式
         const style = new TextStyle({
             fontSize: 10,
             fill: "#ffffff",
         })
-        const zero = new Text(0, style)
-        const { padding } = this.options.grid
-        zero.x = -15
-        zero.y = -15
-        grid.addChild(zero)
         // 水平线
         for (let i = 0; i < n + 1; i++) {
-            const { x, y } = this.__converCoordinates(0, i)
+            const y = i * (lineWidth + cellHeight)
             const line = new Graphics()
             line.lineStyle({ width: lineWidth, color: hex2digital(color) })
                 .moveTo(0, y)
                 .lineTo(width, y)
             const text = new Text(i.toString(), style)
-            text.x = x - 15
-            text.y = y - 6
-            if (i !== 0) grid.addChild(text)
+            text.x = -15
+            text.y = y + cellHeight / 3
+            if (i !== n) grid.addChild(text)
             grid.addChild(line)
         }
         // 竖直线
         for (let j = 0; j < n + 1; j++) {
-            const { x, y } = this.__converCoordinates(j, 0)
+            const x = j * (lineWidth + cellWidth)
             const line = new Graphics()
             line.lineStyle({ width: lineWidth, color: hex2digital(color) })
                 .moveTo(x, 0)
                 .lineTo(x, height)
             const text = new Text(j.toString(), style)
-            text.x = x
-            text.y = y - 15
-            if (j !== 0) grid.addChild(text) // 0只添加一次
+            text.x = x + cellWidth / 3
+            text.y = -15
+            if (j !== n) grid.addChild(text) // 0只添加一次
             grid.addChild(line)
         }
 
         grid.pivot = { x: -padding, y: -padding }
+        const rect = this.__generateRect(21, 5, "#ffffff")
+        grid.addChild(rect)
         this.gridContainer.addChild(grid)
     }
 
