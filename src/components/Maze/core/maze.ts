@@ -6,6 +6,7 @@ import { Rect } from "./utils/pixi/rect"
 import { Algorithm, AlgorithmEngine, Pos } from "./types"
 import { getPath } from "./algorithms/common"
 import { BorderEventSystem } from "./event"
+import { MazeHelper } from "./utils/helper"
 export class Maze {
     private app: Application // 主容器, 填装网格容器
     private gridContainer: Container // 网格容器, 用于承载棋盘
@@ -14,6 +15,8 @@ export class Maze {
     private options: MazeStyleOptions
     private algoEngine?: AlgorithmEngine // 算法引擎
     private event: BorderEventSystem
+    public helper: MazeHelper
+
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
@@ -30,7 +33,8 @@ export class Maze {
         this.board.pivot = { x: -padding, y: -padding }
         this.grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
         this.app.stage.addChild(this.gridContainer)
-        this.event = BorderEventSystem.from(this.grid, this.options).enable()
+        this.event = BorderEventSystem.from(this, this.grid).enable()
+        this.helper = MazeHelper.from(this)
         this.__initGrid()
     }
 
