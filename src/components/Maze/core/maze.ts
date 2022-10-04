@@ -4,9 +4,10 @@ import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
 import { Rect } from "./utils/pixi/rect"
 export class Maze {
-    private app: Application
+    private app: Application // 主容器, 填装网格容器
+    private gridContainer: Container // 网格容器, 用于承载棋盘
+    private board: Container // 棋盘, 用于填充矩形
     private options: MazeStyleOptions
-    private gridContainer: Container // 网格容器
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
@@ -18,7 +19,9 @@ export class Maze {
             backgroundColor: hex2digital(this.options.grid.backGroundColor),
         })
         this.gridContainer = new Container()
-
+        this.board = new Container()
+        this.board.pivot = { x: -padding, y: -padding }
+        this.gridContainer.addChild(this.board)
         this.app.stage.addChild(this.gridContainer)
         this.__initGrid()
     }
@@ -67,6 +70,13 @@ export class Maze {
         }
     }
 
+    /**
+     * 构造网格基本矩形单元
+     * @param rowIndex 网格横轴索引
+     * @param colIndex 网格纵轴索引
+     * @param color 矩形颜色
+     * @returns Graphics实例
+     */
     private __generateRect(rowIndex: number, colIndex: number, color?: string) {
         // 从格点坐标转换成画布坐标系
         const lineWidth = this.options.grid.lineStyle.width
@@ -74,15 +84,18 @@ export class Maze {
         const cellHeight = this.options.grid.unit.height
         const x = lineWidth / 2 + rowIndex * (cellWidth + lineWidth)
         const y = lineWidth / 2 + colIndex * (cellHeight + lineWidth)
-        console.log(x, y)
         return new Rect(x, y, cellWidth, cellHeight, color).toGraphics()
     }
 
-    private __drawBorder() {
-        // 绘制边框
+    /**
+     * 绘制棋盘
+     */
+    private __drawBoard() {
         const { width, height } = this.size
         // 绘制棋盘背景
         const grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
+        this.board.addChild(grid)
+        this.gridContainer.addChild(this.board)
         const color = this.options.grid.lineStyle.color //线条颜色
         const n = this.options.grid.size // 棋盘尺寸
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
@@ -121,10 +134,8 @@ export class Maze {
             grid.addChild(line)
         }
 
-        grid.pivot = { x: -padding, y: -padding }
         const rect = this.__generateRect(21, 5, "#ffffff")
-        grid.addChild(rect)
-        this.gridContainer.addChild(grid)
+        this.board.addChild(rect)
     }
 
     private __initGrid() {
@@ -141,6 +152,6 @@ export class Maze {
                 this.options.grid.backGroundColor
             ).toGraphics()
         )
-        this.__drawBorder()
+        this.__drawBoard()
     }
 }
