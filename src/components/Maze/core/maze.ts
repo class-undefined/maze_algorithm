@@ -12,8 +12,8 @@ export class Maze {
         const { width, height } = this.size
         this.app = new Application({
             view: teleport.tagName === "CANVAS" ? teleport : undefined,
-            width,
-            height,
+            width: width + 20,
+            height: height + 20,
             backgroundColor: hex2digital(this.options.grid.backGroundColor),
         })
         this.gridContainer = new Container()
@@ -94,13 +94,15 @@ export class Maze {
             ).toGraphics()
             grid.addChild(rect)
         }
+        grid.pivot = { x: -10, y: -10 }
         this.gridContainer.addChild(grid)
     }
 
     private __initGrid() {
         const { width, height } = this.size
-        this.gridContainer.width = width
-        this.gridContainer.height = height
+        this.gridContainer.width = width + 20
+        this.gridContainer.height = height + 20
+        this.gridContainer.addChild(new Rect(0, 0, width + 20, height + 20, "#000000").toGraphics())
         this.__grawBorder()
     }
 }
