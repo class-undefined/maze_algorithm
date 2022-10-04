@@ -5,7 +5,7 @@ import { Maze } from "./core/maze"
 const canvas = ref()
 onMounted(() => {
     const maze = Maze.from(canvas.value)
-    maze.bindGrid(new MazeGrid(maze))
+    maze.bindGrid(new MazeGrid(maze.getOptison().grid.size))
 })
 </script>
 
