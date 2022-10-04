@@ -46,8 +46,8 @@ export class Maze {
     }
 
     /** 绑定算法格点 */
-    public bindGrid(grid: AlgorithmEngine) {
-        this.algoEngine = grid
+    public bindEngine(engine: AlgorithmEngine) {
+        this.algoEngine = engine
         return this
     }
 
