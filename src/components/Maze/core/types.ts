@@ -24,7 +24,7 @@ export interface AlgorithmEngine {
     board: Cell[][]
 
     /** 清空棋盘 */
-    clear(): void
+    clear(skipObstacles?: boolean): void
 
     render(): void
 

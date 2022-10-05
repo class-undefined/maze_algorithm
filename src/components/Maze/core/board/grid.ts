@@ -21,9 +21,10 @@ export class MazeGrid implements AlgorithmEngine {
     }
 
     /** 清空棋盘 */
-    clear(): void {
+    clear(skipObstacles: boolean = false): void {
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
+                if (skipObstacles && !this.board[i][j].passable) continue
                 this.board[i][j] = MazeCell.Blank()
             }
         }
