@@ -76,11 +76,9 @@ export class Maze {
      */
     private __generateRect(rowIndex: number, colIndex: number) {
         // 从格点坐标转换成画布坐标系
-        const lineWidth = this.options.grid.lineStyle.width
         const cellWidth = this.options.grid.unit.width
         const cellHeight = this.options.grid.unit.height
-        const x = lineWidth / 2 + rowIndex * (cellWidth + lineWidth)
-        const y = lineWidth / 2 + colIndex * (cellHeight + lineWidth)
+        const [x, y] = this.helper.getPosByIndex(rowIndex, colIndex)
         const gridCell = this.algoEngine!.board[rowIndex][colIndex]
         const graphic = new CellRect(x, y, cellWidth, cellHeight, gridCell.cell).toGraphics()
         gridCell.graphic = graphic
