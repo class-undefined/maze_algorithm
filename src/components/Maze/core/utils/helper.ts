@@ -3,23 +3,10 @@ import { Maze } from "../maze"
 import { Pos } from "../types"
 
 export class MazeHelper {
-    private graphics: Graphics[][]
-    private constructor(private maze: Maze) {
-        const { size } = maze.getOptison().grid
-        this.graphics = []
-        for (let i = 0; i < size; i++) this.graphics[i] = new Array(i)
-    }
+    private constructor(private maze: Maze) {}
 
     public static from(maze: Maze) {
         return new MazeHelper(maze)
-    }
-
-    public insertGraphic(rowIndex: number, colIndex: number, graphic: Graphics) {
-        this.graphics[rowIndex][colIndex] = graphic
-    }
-
-    public getGraphics() {
-        return this.graphics
     }
 
     /**

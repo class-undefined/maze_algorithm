@@ -13,7 +13,7 @@ export class Maze {
     private grid: Graphics // 棋盘坐标
     private board: Container // 棋盘, 用于填充矩形
     private options: MazeStyleOptions
-    private algoEngine?: AlgorithmEngine // 算法引擎
+    public algoEngine?: AlgorithmEngine // 算法引擎
     public event: BorderEventSystem // 事件系统
     public helper: MazeHelper // 工具类
 
@@ -81,9 +81,9 @@ export class Maze {
         const cellHeight = this.options.grid.unit.height
         const x = lineWidth / 2 + rowIndex * (cellWidth + lineWidth)
         const y = lineWidth / 2 + colIndex * (cellHeight + lineWidth)
-        const cell = this.algoEngine!.board[rowIndex][colIndex]
-        const graphic = new CellRect(x, y, cellWidth, cellHeight, cell).toGraphics()
-        this.helper.insertGraphic(rowIndex, colIndex, graphic)
+        const gridCell = this.algoEngine!.board[rowIndex][colIndex]
+        const graphic = new CellRect(x, y, cellWidth, cellHeight, gridCell.cell).toGraphics()
+        gridCell.graphic = graphic
         return graphic
     }
 
