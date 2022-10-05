@@ -1,6 +1,5 @@
-import { Container, DisplayObject } from "pixi.js"
+import { DisplayObject } from "pixi.js"
 import { Maze } from "./maze"
-import { MazeStyleOptions } from "./options"
 
 export type ClickHandler = (rowIndex: number, colIndex: number) => void
 export class BorderEventSystem {

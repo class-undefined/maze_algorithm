@@ -1,3 +1,4 @@
+/** 网格相关配置 */
 export type GridOptions = {
     unit: {
         /**  一个矩形的宽度*/
@@ -17,6 +18,26 @@ export type GridOptions = {
     /** 棋盘外边距 */
     padding: number
 }
+
+/** 迷宫样式相关配置 */
 export type MazeStyleOptions = {
     grid: GridOptions
+}
+
+/** Cell的交互样式配置 */
+export type InteractiveStyle = {
+    /** 正常 */
+    normal: string
+    /** 悬浮 */
+    hover: string
+    /** 按下 */
+    clickDown: string
+    /** 抬起 */
+    clickUp: string
+}
+
+/** Cell的相关样式配置 */
+export type CellStyleOptions = {
+    /** 鼠标交互样式配置 */
+    mouse: InteractiveStyle
 }

@@ -1,4 +1,4 @@
-import { Cell, CellType, Pos } from "../types"
+import { Cell, CellType } from "../types"
 
 export class MazeCell implements Cell {
     public passable: boolean
@@ -6,7 +6,7 @@ export class MazeCell implements Cell {
     private statuStack: Cell[]
     constructor(passable?: boolean, type?: CellType) {
         this.passable = passable ?? true
-        this.type = type ?? CellType.Blank
+        this.type = type ?? "blank"
         this.statuStack = [{ passable: this.passable, type: this.type }]
     }
 
@@ -19,23 +19,19 @@ export class MazeCell implements Cell {
     }
 
     public static Blank() {
-        return new MazeCell(true, CellType.Blank)
+        return new MazeCell(true, "blank")
     }
 
-    public static Road() {
-        return new MazeCell(true, CellType.Road)
+    public static Obstacle() {
+        return new MazeCell(false, "obstacle")
     }
 
-    public static Wall() {
-        return new MazeCell(false, CellType.Wall)
+    public toBlank() {
+        return this.changeStatus(true, "blank")
     }
 
-    public toRoad() {
-        return this.changeStatus(true, CellType.Road)
-    }
-
-    public toWall() {
-        return this.changeStatus(false, CellType.Wall)
+    public toObstacle() {
+        return this.changeStatus(false, "obstacle")
     }
 
     /**

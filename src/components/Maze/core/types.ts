@@ -1,13 +1,12 @@
-export const enum CellType {
-    Road, // 可通行的路
-    Wall, // 墙
-    Blank, // 空白 可通过
-}
+export type CellType = "start" | "end" | "obstacle" | "blank"
 
 export interface Cell {
     /** 是否可通过 */
     passable: boolean
+    /** 类型 */
     type: CellType
+    /** 通过成本, 约定默认为0 */
+    cost?: number
 }
 
 /** 棋盘坐标 */
