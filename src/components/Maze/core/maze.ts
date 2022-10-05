@@ -14,8 +14,8 @@ export class Maze {
     private board: Container // 棋盘, 用于填充矩形
     private options: MazeStyleOptions
     private algoEngine?: AlgorithmEngine // 算法引擎
-    public event: BorderEventSystem
-    public helper: MazeHelper
+    public event: BorderEventSystem // 事件系统
+    public helper: MazeHelper // 工具类
 
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
         this.options = { ...defaultMazeOptions, ...(options || {}) }
@@ -74,15 +74,17 @@ export class Maze {
      * @param color 矩形颜色
      * @returns Graphics实例
      */
-    private __generateRect(rowIndex: number, colIndex: number, cell: Cell) {
+    private __generateRect(rowIndex: number, colIndex: number) {
         // 从格点坐标转换成画布坐标系
         const lineWidth = this.options.grid.lineStyle.width
         const cellWidth = this.options.grid.unit.width
         const cellHeight = this.options.grid.unit.height
         const x = lineWidth / 2 + rowIndex * (cellWidth + lineWidth)
         const y = lineWidth / 2 + colIndex * (cellHeight + lineWidth)
-        const { type } = this.algoEngine!.board[rowIndex][colIndex]
-        return new CellRect(x, y, cellWidth, cellHeight, cell).toGraphics()
+        const cell = this.algoEngine!.board[rowIndex][colIndex]
+        const graphic = new CellRect(x, y, cellWidth, cellHeight, cell).toGraphics()
+        this.helper.insertGraphic(rowIndex, colIndex, graphic)
+        return graphic
     }
 
     /**
@@ -91,8 +93,8 @@ export class Maze {
      * @param colIndex 网格纵轴索引
      * @param color 矩形颜色
      */
-    private __drawRect(rowIndex: number, colIndex: number, cell: Cell) {
-        const graphic = this.__generateRect(rowIndex, colIndex, cell)
+    private __drawRect(rowIndex: number, colIndex: number) {
+        const graphic = this.__generateRect(rowIndex, colIndex)
         this.board.addChild(graphic)
     }
 
@@ -171,8 +173,7 @@ export class Maze {
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         path?.forEach(([x, y]) => {
-            const cell = this.algoEngine!.board[x][y]
-            this.__drawRect(x, y, cell)
+            this.__drawRect(x, y)
         })
     }
 }

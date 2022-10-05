@@ -1,7 +1,7 @@
-import { DisplayObject } from "pixi.js"
+import { DisplayObject, Graphics } from "pixi.js"
 import { Maze } from "./maze"
 
-export type ClickHandler = (rowIndex: number, colIndex: number) => void
+export type ClickHandler = (rowIndex: number, colIndex: number, graphic: Graphics) => void
 export class BorderEventSystem {
     private clickHandlers: ClickHandler[]
     private constructor(private maze: Maze, private border: DisplayObject) {
@@ -19,7 +19,11 @@ export class BorderEventSystem {
             const x = e.data.global.x - padding - lineWidth
             const y = e.data.global.y - padding - lineWidth
             if (x < 0 || y < 0) return
-            this.clickHandlers.forEach(handler => handler(...this.maze.helper.getRectPos(x, y)))
+            const graphics = this.maze.helper.getGraphics()
+            const [rowIndex, colIndex] = this.maze.helper.getRectPos(x, y)
+            this.clickHandlers.forEach(handler =>
+                handler(rowIndex, colIndex, graphics[rowIndex][colIndex])
+            )
         })
     }
 

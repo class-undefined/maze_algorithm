@@ -71,12 +71,12 @@ export class CellRect extends Rect {
         graphic.addListener("mouseleave", () => {
             changeColor(this.cell.style.mouse.normal)
         })
-        graphic.addListener("click", () => {
+        graphic.addListener("mousedown", () => {
             changeColor(this.cell.style.mouse.mousedown)
         })
-        // graphic.addListener("mouseup", () => {
-        //     graphic.tint = hex2digital(this.options.mouse.clickUp)
-        // })
+        graphic.addListener("mouseup", () => {
+            changeColor(this.cell.style.mouse.mouseup)
+        })
         return graphic
     }
 }
