@@ -1,20 +1,26 @@
+import { CellStyleOptions } from "../options"
+import { DefaultCellStyleTable } from "../options.default"
 import { Cell, CellType } from "../types"
 
 export class MazeCell implements Cell {
     public passable: boolean
     public type: CellType
+    public cost?: number | undefined
+    public style: CellStyleOptions
     private statuStack: Cell[]
     constructor(passable?: boolean, type?: CellType) {
         this.passable = passable ?? true
         this.type = type ?? "blank"
-        this.statuStack = [{ passable: this.passable, type: this.type }]
+        this.style = DefaultCellStyleTable[this.type]
+        this.statuStack = [{ passable: this.passable, type: this.type, style: this.style }]
     }
 
     public changeStatus(passable?: boolean, type?: CellType) {
         if (!passable && !type) return this
         this.passable = passable ?? this.passable
         this.type = type ?? this.type
-        this.statuStack.push({ passable: this.passable, type: this.type })
+        this.style = DefaultCellStyleTable[this.type]
+        this.statuStack.push({ passable: this.passable, type: this.type, style: this.style })
         return this
     }
 
@@ -41,9 +47,10 @@ export class MazeCell implements Cell {
     public backtrack() {
         this.statuStack.pop()
         if (this.statuStack.length === 0) throw "当前时刻仅有一个状态, 上一个状态为空, 不可回溯"
-        const { passable, type } = this.statuStack[this.statuStack.length - 1]
+        const { passable, type, style } = this.statuStack[this.statuStack.length - 1]
         this.passable = passable
         this.type = type
+        this.style = style
         return this
     }
 }

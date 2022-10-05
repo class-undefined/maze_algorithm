@@ -1,3 +1,5 @@
+import { CellStyleOptions } from "./options"
+
 export type CellType = "start" | "end" | "obstacle" | "blank"
 
 export interface Cell {
@@ -7,6 +9,8 @@ export interface Cell {
     type: CellType
     /** 通过成本, 约定默认为0 */
     cost?: number
+    /** 样式 */
+    style: CellStyleOptions
 }
 
 /** 棋盘坐标 */

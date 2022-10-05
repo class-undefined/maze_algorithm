@@ -169,7 +169,7 @@ export class Maze {
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         path?.forEach(([x, y]) => {
-            this.__drawRect(x, y, "#77abb7")
+            this.__drawRect(x, y, "#404969")
         })
     }
 }
