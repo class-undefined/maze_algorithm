@@ -13,8 +13,10 @@ export const DefaultGrid: GridOptions = {
     },
     padding: 20,
     axis: {
+        /** 刻度字体大小 */
         fontSize: 12,
-        color: "#ffffff",
+        /** 刻度颜色 */
+        color: "#f7d098",
     },
 }
 
