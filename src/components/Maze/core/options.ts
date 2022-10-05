@@ -1,3 +1,10 @@
+import { CellType } from "./types"
+
+export type GridAxisOptions = {
+    fontSize: number
+    color: string
+}
+
 /** 网格相关配置 */
 export type GridOptions = {
     unit: {
@@ -15,6 +22,7 @@ export type GridOptions = {
         color: string
     }
     backGroundColor: string
+    axis: GridAxisOptions
     /** 棋盘外边距 */
     padding: number
 }
@@ -41,3 +49,5 @@ export type CellStyleOptions = {
     /** 鼠标交互样式配置 */
     mouse: InteractiveStyle
 }
+
+export type CellStyleTableOptions = Record<CellType, CellStyleOptions>

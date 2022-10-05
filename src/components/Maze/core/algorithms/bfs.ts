@@ -9,12 +9,12 @@ export const bfsSearch: MazeAlgorithm = (grid: AlgorithmEngine, source: Pos, tar
         const size = queue.length
         for (let i = 0; i < size; i++) {
             const p = queue.shift() as Pos
-            visited.add(p.join(","))
             if (p.join(",") === target.join(",")) {
                 return path
             }
             for (const next of grid.neighbors(p)) {
                 if (visited.has(next.join(","))) continue
+                visited.add(p.join(","))
                 queue.push(next)
                 path.set(next.join(","), p)
             }

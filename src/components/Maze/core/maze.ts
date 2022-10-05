@@ -104,10 +104,11 @@ export class Maze {
         const lineWidth = this.options.grid.lineStyle.width // 线条宽度
         const cellWidth = this.options.grid.unit.width
         const cellHeight = this.options.grid.unit.height
+
         // 刻度文字样式
         const style = new TextStyle({
-            fontSize: 12,
-            fill: "#ffffff",
+            fontSize: this.options.grid.axis.fontSize,
+            fill: this.options.grid.axis.color,
         })
         // 水平线
         for (let i = 0; i < n + 1; i++) {
@@ -168,7 +169,7 @@ export class Maze {
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         path?.forEach(([x, y]) => {
-            this.__drawRect(x, y, "#15416F")
+            this.__drawRect(x, y, "#77abb7")
         })
     }
 }

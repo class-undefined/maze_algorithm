@@ -1,4 +1,4 @@
-import { GridOptions, MazeStyleOptions } from "./options"
+import { CellStyleTableOptions, GridOptions, MazeStyleOptions } from "./options"
 
 export const DefaultGrid: GridOptions = {
     unit: {
@@ -8,12 +8,24 @@ export const DefaultGrid: GridOptions = {
     size: 10,
     backGroundColor: "#23272e",
     lineStyle: {
-        width: 2,
-        color: "#458CFF",
+        width: 4,
+        color: "#000000",
     },
     padding: 20,
+    axis: {
+        fontSize: 12,
+        color: "#ffffff",
+    },
 }
 
 export const defaultMazeOptions: MazeStyleOptions = {
     grid: DefaultGrid,
 }
+
+// export const DefaultCellStyleTable: CellStyleTableOptions = {
+//     start: {
+//         mouse: {
+//             normal: ""
+//         }
+//     }
+// }
