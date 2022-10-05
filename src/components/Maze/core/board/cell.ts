@@ -3,11 +3,21 @@ import { DefaultCellStyleTable } from "../options.default"
 import { Cell, CellType } from "../types"
 
 export class MazeCell implements Cell {
+    /** 是否可通过 */
     public passable: boolean
+
+    /** 单元格类型 */
     public type: CellType
+
+    /** 到达代价 */
     public cost?: number | undefined
+
+    /** 定义相关样式 */
     public style: CellStyleOptions
+
+    /** 用于自身状态回溯, 回到上一次的状态 */
     private statuStack: Cell[]
+
     constructor(passable?: boolean, type?: CellType) {
         this.passable = passable ?? true
         this.type = type ?? "blank"
