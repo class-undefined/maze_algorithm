@@ -41,9 +41,9 @@ export type InteractiveStyle = {
     /** 悬浮 */
     hover: string
     /** 按下 */
-    clickDown: string
+    mousedown: string
     /** 抬起 */
-    clickUp: string
+    mouseup: string
 }
 
 /** Cell的相关样式配置 */

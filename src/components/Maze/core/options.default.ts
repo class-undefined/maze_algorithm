@@ -27,32 +27,32 @@ export const DefaultCellStyleTable: CellStyleTableOptions = {
         mouse: {
             normal: "#404969",
             hover: "#404969",
-            clickDown: "#404969",
-            clickUp: "#404969",
+            mousedown: "#404969",
+            mouseup: "#404969",
         },
     },
     start: {
         mouse: {
             normal: "#bde4f4",
             hover: "#bde4f4",
-            clickDown: "#bde4f4",
-            clickUp: "#bde4f4",
+            mousedown: "#bde4f4",
+            mouseup: "#bde4f4",
         },
     },
     end: {
         mouse: {
             normal: "#e0fcff",
             hover: "#e0fcff",
-            clickDown: "#e0fcff",
-            clickUp: "#e0fcff",
+            mousedown: "#e0fcff",
+            mouseup: "#e0fcff",
         },
     },
     obstacle: {
         mouse: {
             normal: "#ff7f50",
             hover: "#ff7f50",
-            clickDown: "#ff7f50",
-            clickUp: "#ff7f50",
+            mousedown: "#ff7f50",
+            mouseup: "#ff7f50",
         },
     },
 }

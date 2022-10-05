@@ -1,9 +1,9 @@
 import { MazeStyleOptions } from "./options"
-import { defaultMazeOptions } from "./options.default"
+import { DefaultCellStyleTable, defaultMazeOptions } from "./options.default"
 import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
-import { Rect } from "./utils/pixi/rect"
-import { Algorithm, AlgorithmEngine, Pos } from "./types"
+import { CellRect, Rect } from "./utils/pixi/rect"
+import { Algorithm, AlgorithmEngine, Cell, Pos } from "./types"
 import { getPath } from "./algorithms/common"
 import { BorderEventSystem } from "./event"
 import { MazeHelper } from "./utils/helper"
@@ -35,6 +35,7 @@ export class Maze {
         this.app.stage.addChild(this.gridContainer)
         this.event = BorderEventSystem.from(this, this.grid).enable()
         this.helper = MazeHelper.from(this)
+        CellRect.bind(this.helper)
         this.__initGrid()
     }
 
@@ -73,14 +74,15 @@ export class Maze {
      * @param color 矩形颜色
      * @returns Graphics实例
      */
-    private __generateRect(rowIndex: number, colIndex: number, color?: string) {
+    private __generateRect(rowIndex: number, colIndex: number, cell: Cell) {
         // 从格点坐标转换成画布坐标系
         const lineWidth = this.options.grid.lineStyle.width
         const cellWidth = this.options.grid.unit.width
         const cellHeight = this.options.grid.unit.height
         const x = lineWidth / 2 + rowIndex * (cellWidth + lineWidth)
         const y = lineWidth / 2 + colIndex * (cellHeight + lineWidth)
-        return new Rect(x, y, cellWidth, cellHeight, color).toGraphics()
+        const { type } = this.algoEngine!.board[rowIndex][colIndex]
+        return new CellRect(x, y, cellWidth, cellHeight, cell).toGraphics()
     }
 
     /**
@@ -89,8 +91,8 @@ export class Maze {
      * @param colIndex 网格纵轴索引
      * @param color 矩形颜色
      */
-    private __drawRect(rowIndex: number, colIndex: number, color?: string) {
-        const graphic = this.__generateRect(rowIndex, colIndex, color)
+    private __drawRect(rowIndex: number, colIndex: number, cell: Cell) {
+        const graphic = this.__generateRect(rowIndex, colIndex, cell)
         this.board.addChild(graphic)
     }
 
@@ -169,7 +171,8 @@ export class Maze {
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         path?.forEach(([x, y]) => {
-            this.__drawRect(x, y, "#404969")
+            const cell = this.algoEngine!.board[x][y]
+            this.__drawRect(x, y, cell)
         })
     }
 }
