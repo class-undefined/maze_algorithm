@@ -14,7 +14,7 @@ export class Maze {
     private board: Container // 棋盘, 用于填充矩形
     private options: MazeStyleOptions
     private algoEngine?: AlgorithmEngine // 算法引擎
-    private event: BorderEventSystem
+    public event: BorderEventSystem
     public helper: MazeHelper
 
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
