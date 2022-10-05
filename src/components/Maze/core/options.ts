@@ -1,7 +1,9 @@
 import { CellType } from "./types"
 
 export type GridAxisOptions = {
+    /** 刻度字体大小 */
     fontSize: number
+    /** 刻度字体颜色 */
     color: string
 }
 
