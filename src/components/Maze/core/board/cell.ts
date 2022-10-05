@@ -34,6 +34,14 @@ export class MazeCell implements Cell {
         return this
     }
 
+    public static Start() {
+        return new MazeCell(false, "start")
+    }
+
+    public static End() {
+        return new MazeCell(true, "end")
+    }
+
     public static Blank() {
         return new MazeCell(true, "blank")
     }
