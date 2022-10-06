@@ -61,13 +61,17 @@ export class CellRect extends Rect {
             .drawRect(x, y, width, height)
             .endFill()
         graphic.interactive = true
-        graphic.addListener("mouseenter", () => {
+        let clicked = false
+        graphic.addListener("mouseover", () => {
+            if (clicked) return
             changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.hover)
         })
-        graphic.addListener("mouseleave", () => {
+        graphic.addListener("mouseout", () => {
+            if (clicked) return
             changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.normal)
         })
-        graphic.addListener("mousedown", () => {
+        graphic.addListener("click", () => {
+            clicked = !clicked
             changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.mousedown)
         })
         graphic.addListener("mouseup", () => {
