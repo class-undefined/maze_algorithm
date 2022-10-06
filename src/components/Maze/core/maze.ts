@@ -71,7 +71,8 @@ export class Maze {
         }
         useSubscriptCellClick(cell => {
             if (["start", "end"].find(type => cell.type === type)) return
-            cell.to("obstacle")
+            if (cell.type === "obstacle") cell.to("blank")
+            else if (cell.type === "blank" || cell.type === "path") cell.to("obstacle")
             this.clearBoard(true)
             this.search(this.__start!, this.__end!)
         })
