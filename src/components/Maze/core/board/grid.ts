@@ -27,7 +27,8 @@ export class MazeGrid implements AlgorithmEngine {
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
                 if (skipObstacles && !this.board[i][j].passable) continue
-                this.board[i][j] = MazeCell.Blank()
+                if (["start", "end"].find(type => type === this.board[i][j].type)) continue
+                this.board[i][j].to("blank")
             }
         }
     }

@@ -169,7 +169,6 @@ export class Maze {
 
     /** 清空棋盘 */
     public clearBoard() {
-        this.board.removeChildren()
         this.algoEngine?.clear()
     }
 
