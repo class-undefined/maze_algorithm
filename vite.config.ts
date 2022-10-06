@@ -7,4 +7,5 @@ export default defineConfig({
     test: {
         includeSource: ["src/**/*.{js,ts}"],
     },
+    base: "/maze_algorithm/",
 })
