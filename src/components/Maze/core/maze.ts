@@ -8,32 +8,39 @@ import { getPath } from "./algorithms/common"
 import { BorderEventSystem } from "./event"
 import { MazeHelper } from "./utils/helper"
 export class Maze {
-    private app: Application // 主容器, 填装网格容器
-    private gridContainer: Container // 网格容器, 用于承载棋盘
-    private grid: Graphics // 棋盘坐标
-    private board: Container // 棋盘, 用于填充矩形
-    private options: MazeStyleOptions
+    private __app: Application // 主容器, 填装网格容器
+    private __gridContainer: Container // 网格容器, 用于承载棋盘
+    private __grid: Graphics // 棋盘坐标
+    private __board: Container // 棋盘, 用于填充矩形
+    private __options: MazeStyleOptions
+
     public algoEngine?: AlgorithmEngine // 算法引擎
     public event: BorderEventSystem // 事件系统
     public helper: MazeHelper // 工具类
 
     private constructor(teleport: HTMLCanvasElement, options?: Partial<MazeStyleOptions>) {
-        this.options = { ...defaultMazeOptions, ...(options || {}) }
+        this.__options = { ...defaultMazeOptions, ...(options || {}) }
         const { width, height } = this.size
-        const { padding } = this.options.grid
-        this.app = new Application({
+        const { padding } = this.__options.grid
+        this.__app = new Application({
             view: teleport.tagName === "CANVAS" ? teleport : undefined,
             width: width + 2 * padding,
             height: height + 2 * padding,
-            backgroundColor: hex2digital(this.options.grid.backGroundColor),
+            backgroundColor: hex2digital(this.__options.grid.backGroundColor),
             resolution: 1,
         })
-        this.gridContainer = new Container()
-        this.board = new Container()
-        this.board.pivot = { x: -padding, y: -padding }
-        this.grid = new Rect(0, 0, width, height, this.options.grid.backGroundColor).toGraphics()
-        this.app.stage.addChild(this.gridContainer)
-        this.event = BorderEventSystem.from(this, this.grid).enable()
+        this.__gridContainer = new Container()
+        this.__board = new Container()
+        this.__board.pivot = { x: -padding, y: -padding }
+        this.__grid = new Rect(
+            0,
+            0,
+            width,
+            height,
+            this.__options.grid.backGroundColor
+        ).toGraphics()
+        this.__app.stage.addChild(this.__gridContainer)
+        this.event = BorderEventSystem.from(this, this.__grid).enable()
         this.helper = MazeHelper.from(this)
         CellRect.bind(this.helper)
         this.__initGrid()
@@ -47,13 +54,13 @@ export class Maze {
     }
 
     public getOptison(): Readonly<MazeStyleOptions> {
-        return this.options
+        return this.__options
     }
 
     /** 绑定算法格点 */
     public bindEngine(engine: AlgorithmEngine) {
         this.algoEngine = engine
-        const { size } = this.options.grid
+        const { size } = this.__options.grid
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
                 this.__drawRect(i, j)
@@ -63,9 +70,9 @@ export class Maze {
     }
 
     public get size() {
-        const n = this.options.grid.size
-        const { width, height } = this.options.grid.unit
-        const spacing = this.options.grid.lineStyle.width
+        const n = this.__options.grid.size
+        const { width, height } = this.__options.grid.unit
+        const spacing = this.__options.grid.lineStyle.width
         const buff = n * spacing
         return {
             width: n * width + buff,
@@ -82,8 +89,8 @@ export class Maze {
      */
     private __generateRect(rowIndex: number, colIndex: number) {
         // 从格点坐标转换成画布坐标系
-        const cellWidth = this.options.grid.unit.width
-        const cellHeight = this.options.grid.unit.height
+        const cellWidth = this.__options.grid.unit.width
+        const cellHeight = this.__options.grid.unit.height
         const [x, y] = this.helper.getPosByIndex(rowIndex, colIndex)
         const gridCell = this.algoEngine!.board[rowIndex][colIndex]
         const graphic = new CellRect(x, y, cellWidth, cellHeight, gridCell).toGraphics()
@@ -100,7 +107,7 @@ export class Maze {
      */
     private __drawRect(rowIndex: number, colIndex: number) {
         const graphic = this.__generateRect(rowIndex, colIndex)
-        this.board.addChild(graphic)
+        this.__board.addChild(graphic)
     }
 
     /**
@@ -108,16 +115,16 @@ export class Maze {
      */
     private __drawBoard() {
         const { width, height } = this.size
-        const color = this.options.grid.lineStyle.color //线条颜色
-        const n = this.options.grid.size // 棋盘尺寸
-        const lineWidth = this.options.grid.lineStyle.width // 线条宽度
-        const cellWidth = this.options.grid.unit.width
-        const cellHeight = this.options.grid.unit.height
+        const color = this.__options.grid.lineStyle.color //线条颜色
+        const n = this.__options.grid.size // 棋盘尺寸
+        const lineWidth = this.__options.grid.lineStyle.width // 线条宽度
+        const cellWidth = this.__options.grid.unit.width
+        const cellHeight = this.__options.grid.unit.height
 
         // 刻度文字样式
         const style = new TextStyle({
-            fontSize: this.options.grid.axis.fontSize,
-            fill: this.options.grid.axis.color,
+            fontSize: this.__options.grid.axis.fontSize,
+            fill: this.__options.grid.axis.color,
         })
         // 水平线
         for (let i = 0; i < n + 1; i++) {
@@ -129,8 +136,8 @@ export class Maze {
             const text = new Text(i.toString(), style)
             text.x = -15
             text.y = y + cellHeight / 3
-            if (i !== n) this.grid.addChild(text)
-            this.grid.addChild(line)
+            if (i !== n) this.__grid.addChild(text)
+            this.__grid.addChild(line)
         }
         // 竖直线
         for (let j = 0; j < n + 1; j++) {
@@ -142,28 +149,28 @@ export class Maze {
             const text = new Text(j.toString(), style)
             text.x = x + cellWidth / 3
             text.y = -19
-            if (j !== n) this.grid.addChild(text) // 0只添加一次
-            this.grid.addChild(line)
+            if (j !== n) this.__grid.addChild(text) // 0只添加一次
+            this.__grid.addChild(line)
         }
     }
 
     private __initGrid() {
         const { width, height } = this.size
-        const { padding } = this.options.grid
-        this.gridContainer.width = width + 2 * padding
-        this.gridContainer.height = height + 2 * padding
-        this.gridContainer.addChild(
+        const { padding } = this.__options.grid
+        this.__gridContainer.width = width + 2 * padding
+        this.__gridContainer.height = height + 2 * padding
+        this.__gridContainer.addChild(
             new Rect(
                 0,
                 0,
                 width + 2 * padding,
                 height + 2 * padding,
-                this.options.grid.backGroundColor
+                this.__options.grid.backGroundColor
             ).toGraphics()
         )
-        this.grid.pivot = { x: -padding, y: -padding }
-        this.gridContainer.addChild(this.grid)
-        this.gridContainer.addChild(this.board)
+        this.__grid.pivot = { x: -padding, y: -padding }
+        this.__gridContainer.addChild(this.__grid)
+        this.__gridContainer.addChild(this.__board)
         this.__drawBoard()
     }
 
