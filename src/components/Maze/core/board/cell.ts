@@ -29,6 +29,7 @@ export class MazeCell implements Cell {
         return this.__graphic
     }
 
+    /** 设置graphic时绑定单击监听 */
     public set graphic(graphic: Graphics | undefined) {
         this.__graphic = graphic
         if (graphic) {
