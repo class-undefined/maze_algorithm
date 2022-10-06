@@ -1,10 +1,11 @@
 import { MazeCell } from "../board/cell"
 import mitt from "mitt"
+/** cell单击事件池 */
 const handlers: ((cell: MazeCell) => void)[] = []
 type CellEvent = {
     click: MazeCell
 }
-/** cell单击事件池 */
+
 const cellClickEvent = mitt<CellEvent>()
 cellClickEvent.on("click", cell => {
     handlers.forEach(handler => setTimeout(() => handler(cell)))
