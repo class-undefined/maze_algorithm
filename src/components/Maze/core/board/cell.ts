@@ -1,4 +1,5 @@
 import { Graphics } from "pixi.js"
+import { cellClicked } from "../hooks/subscription"
 import { CellStyleOptions } from "../options"
 import { CellConfig } from "../options.default"
 import { Cell, CellType } from "../types"
@@ -17,7 +18,7 @@ export class MazeCell implements Cell {
     /** 定义相关样式 */
     public style: CellStyleOptions
 
-    public _graphic?: Graphics
+    private __graphic?: Graphics
 
     public boundingBox?: [number, number, number, number]
 
@@ -25,13 +26,13 @@ export class MazeCell implements Cell {
     private statuStack: Cell[]
 
     public get graphic() {
-        return this._graphic
+        return this.__graphic
     }
 
     public set graphic(graphic: Graphics | undefined) {
-        this._graphic = graphic
+        this.__graphic = graphic
         if (graphic) {
-            // handler
+            graphic.on("click", () => cellClicked(this))
         }
     }
 
