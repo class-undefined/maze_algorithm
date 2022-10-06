@@ -7,12 +7,15 @@ import { Algorithm, AlgorithmEngine, Pos } from "./types"
 import { getPath } from "./algorithms/common"
 import { BorderEventSystem } from "./event"
 import { MazeHelper } from "./utils/helper"
+import { useSubscriptCellClick } from "./hooks/subscription"
 export class Maze {
     private __app: Application // 主容器, 填装网格容器
     private __gridContainer: Container // 网格容器, 用于承载棋盘
     private __grid: Graphics // 棋盘坐标
     private __board: Container // 棋盘, 用于填充矩形
     private __options: MazeStyleOptions
+    private __start?: Pos
+    private __end?: Pos
 
     public algoEngine?: AlgorithmEngine // 算法引擎
     public event: BorderEventSystem // 事件系统
@@ -66,6 +69,12 @@ export class Maze {
                 this.__drawRect(i, j)
             }
         }
+        useSubscriptCellClick(cell => {
+            if (["start", "end"].find(type => cell.type === type)) return
+            cell.to("obstacle")
+            this.clearBoard(true)
+            this.search(this.__start!, this.__end!)
+        })
         return this
     }
 
@@ -175,12 +184,14 @@ export class Maze {
     }
 
     /** 清空棋盘 */
-    public clearBoard() {
-        this.algoEngine?.clear()
+    public clearBoard(skipObstacles: boolean = false) {
+        this.algoEngine?.clear(skipObstacles)
     }
 
     public search(source: Pos, target: Pos, type: Algorithm = "bfs") {
         if (!this.algoEngine) throw "尚未载入格点搜索系统 Grid class"
+        this.__start = source
+        this.__end = target
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         const { board } = this.algoEngine!

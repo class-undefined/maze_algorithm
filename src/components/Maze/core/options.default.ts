@@ -62,8 +62,8 @@ export const CellConfig: CellOption = {
         cost: Infinity,
         style: {
             mouse: {
-                normal: "#ff7f50",
-                click: "#ff7f50",
+                normal: "#000000",
+                click: "#000000",
             },
         },
     },
