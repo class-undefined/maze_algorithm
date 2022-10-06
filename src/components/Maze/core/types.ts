@@ -15,11 +15,6 @@ export interface Cell {
     style: CellStyleOptions
 }
 
-export type GridCell = {
-    cell: MazeCell
-    graphic?: Graphics
-}
-
 /** 棋盘坐标 */
 export type Pos = [number, number]
 
@@ -31,7 +26,7 @@ export type Path = Pos[]
 
 /** 网格接口 */
 export interface AlgorithmEngine {
-    board: GridCell[][]
+    board: MazeCell[][]
 
     /** 清空棋盘 */
     clear(skipObstacles?: boolean): void

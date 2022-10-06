@@ -1,11 +1,10 @@
-import { Graphics } from "pixi.js"
 import { bfsSearch } from "../algorithms/bfs"
 import { getPath } from "../algorithms/common"
-import { Cell, AlgorithmEngine, Pos, Algorithm, GridCell } from "../types"
+import { AlgorithmEngine, Pos, Algorithm } from "../types"
 import { MazeCell } from "./cell"
 
 export class MazeGrid implements AlgorithmEngine {
-    public board: GridCell[][]
+    public board: MazeCell[][]
     private directions: number[][] = [
         [0, -1],
         [1, 0],
@@ -13,11 +12,11 @@ export class MazeGrid implements AlgorithmEngine {
         [-1, 0],
     ] // ↑→↓←
     constructor(private size: number) {
-        this.board = new Array<GridCell[]>(size)
+        this.board = new Array<MazeCell[]>(size)
         for (let i = 0; i < this.size; i++) {
-            const col = new Array<GridCell>(size)
+            const col = new Array<MazeCell>(size)
             for (let j = 0; j < size; j++) {
-                col[j] = { cell: MazeCell.Blank() }
+                col[j] = MazeCell.Blank()
             }
             this.board[i] = col
         }
@@ -27,8 +26,8 @@ export class MazeGrid implements AlgorithmEngine {
     clear(skipObstacles: boolean = false): void {
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
-                if (skipObstacles && !this.board[i][j].cell.passable) continue
-                this.board[i][j].cell = MazeCell.Blank()
+                if (skipObstacles && !this.board[i][j].passable) continue
+                this.board[i][j] = MazeCell.Blank()
             }
         }
     }
@@ -47,7 +46,7 @@ export class MazeGrid implements AlgorithmEngine {
     }
 
     passable(pos: Pos): boolean {
-        return this.board[pos[0]][pos[1]].cell.passable
+        return this.board[pos[0]][pos[1]].passable
     }
 
     neighbors(pos: Pos): Pos[] {
@@ -56,7 +55,7 @@ export class MazeGrid implements AlgorithmEngine {
             const x = dx + pos[0]
             const y = dy + pos[1]
             if (x < 0 || y < 0 || x >= this.size || y >= this.size) continue //跳过超出边界的坐标
-            if (!this.board[x][y].cell.passable) continue
+            if (!this.board[x][y].passable) continue
             list.push([x, y])
         }
         return list

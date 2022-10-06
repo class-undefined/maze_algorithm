@@ -1,3 +1,4 @@
+import { Graphics } from "pixi.js"
 import { CellStyleOptions } from "../options"
 import { CellConfig } from "../options.default"
 import { Cell, CellType } from "../types"
@@ -15,16 +16,19 @@ export class MazeCell implements Cell {
     /** 定义相关样式 */
     public style: CellStyleOptions
 
+    public graphic?: Graphics
+
     /** 用于自身状态回溯, 回到上一次的状态 */
     private statuStack: Cell[]
 
-    constructor(type: CellType) {
+    constructor(type: CellType, graphic?: Graphics) {
         this.statuStack = []
         const cell = CellConfig[type]
         this.passable = cell.passable
         this.type = cell.type
         this.style = cell.style
         this.cost = cell.cost
+        this.graphic = graphic
         this.statuStack.push({ ...cell })
     }
 

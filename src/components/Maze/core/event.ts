@@ -1,8 +1,8 @@
 import { DisplayObject, Graphics } from "pixi.js"
+import { MazeCell } from "./board/cell"
 import { Maze } from "./maze"
-import { GridCell } from "./types"
 
-export type ClickHandler = (rowIndex: number, colIndex: number, gridCell: GridCell) => void
+export type ClickHandler = (rowIndex: number, colIndex: number, gridCell: MazeCell) => void
 export class BorderEventSystem {
     private clickHandlers: ClickHandler[]
     private constructor(private maze: Maze, private border: DisplayObject) {

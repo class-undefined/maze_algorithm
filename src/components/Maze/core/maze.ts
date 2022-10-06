@@ -86,7 +86,7 @@ export class Maze {
         const cellHeight = this.options.grid.unit.height
         const [x, y] = this.helper.getPosByIndex(rowIndex, colIndex)
         const gridCell = this.algoEngine!.board[rowIndex][colIndex]
-        const graphic = new CellRect(x, y, cellWidth, cellHeight, gridCell.cell).toGraphics()
+        const graphic = new CellRect(x, y, cellWidth, cellHeight, gridCell).toGraphics()
         gridCell.graphic = graphic
         return graphic
     }
@@ -177,11 +177,10 @@ export class Maze {
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
         const { board } = this.algoEngine!
-        board[source[0]][source[1]].cell.to("start")
-        board[target[0]][target[1]].cell.to("end")
+        board[source[0]][source[1]].to("start")
+        board[target[0]][target[1]].to("end")
         path?.forEach(([x, y]) => {
-            if (!["start", "end"].find(type => board[x][y].cell.type === type))
-                board[x][y].cell.to("path")
+            if (!["start", "end"].find(type => board[x][y].type === type)) board[x][y].to("path")
             this.__drawRect(x, y)
         })
     }
