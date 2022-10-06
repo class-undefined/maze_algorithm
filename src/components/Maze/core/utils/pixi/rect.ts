@@ -3,6 +3,7 @@ import { hex2digital } from ".."
 import { Cell } from "../../types"
 import { MazeHelper } from "../helper"
 import { changeGraphicColor } from "./graphic"
+import Color from "color"
 type Pos = {
     x: number
     y: number
@@ -61,21 +62,17 @@ export class CellRect extends Rect {
             .drawRect(x, y, width, height)
             .endFill()
         graphic.interactive = true
-        let clicked = false
+
         graphic.addListener("mouseover", () => {
-            if (clicked) return
-            changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.hover)
+            const { normal } = this.cell.style.mouse
+            const color = new Color(normal)
+            changeGraphicColor(graphic, x, y, width, height, color.darken(0.4).hex())
         })
         graphic.addListener("mouseout", () => {
-            if (clicked) return
             changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.normal)
         })
         graphic.addListener("click", () => {
-            clicked = !clicked
-            changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.mousedown)
-        })
-        graphic.addListener("mouseup", () => {
-            changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.mouseup)
+            changeGraphicColor(graphic, x, y, width, height, this.cell.style.mouse.click)
         })
         return graphic
     }

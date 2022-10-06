@@ -38,12 +38,8 @@ export type MazeStyleOptions = {
 export type InteractiveStyle = {
     /** 正常 */
     normal: string
-    /** 悬浮 */
-    hover: string
     /** 按下 */
-    mousedown: string
-    /** 抬起 */
-    mouseup: string
+    click: string
 }
 
 /** Cell的相关样式配置 */

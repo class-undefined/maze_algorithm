@@ -27,9 +27,7 @@ export const CellConfig: CellOption = {
         style: {
             mouse: {
                 normal: "#404969",
-                hover: "#404969",
-                mousedown: "#404969",
-                mouseup: "#404969",
+                click: "#404969",
             },
         },
         passable: true,
@@ -43,9 +41,7 @@ export const CellConfig: CellOption = {
         style: {
             mouse: {
                 normal: "#bde4f4",
-                hover: "#bde4f4",
-                mousedown: "#bde4f4",
-                mouseup: "#bde4f4",
+                click: "#bde4f4",
             },
         },
     },
@@ -56,9 +52,7 @@ export const CellConfig: CellOption = {
         style: {
             mouse: {
                 normal: "#e0fcff",
-                hover: "#e0fcff",
-                mousedown: "#e0fcff",
-                mouseup: "#e0fcff",
+                click: "#e0fcff",
             },
         },
     },
@@ -69,9 +63,7 @@ export const CellConfig: CellOption = {
         style: {
             mouse: {
                 normal: "#ff7f50",
-                hover: "#ff7f50",
-                mousedown: "#ff7f50",
-                mouseup: "#ff7f50",
+                click: "#ff7f50",
             },
         },
     },
@@ -82,9 +74,7 @@ export const CellConfig: CellOption = {
         style: {
             mouse: {
                 normal: "#E67E22",
-                hover: "#E67E22",
-                mousedown: "#E67E22",
-                mouseup: "#E67E22",
+                click: "#E67E22",
             },
         },
     },
