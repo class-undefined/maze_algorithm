@@ -1,4 +1,4 @@
-import { CellStyleTableOptions, GridOptions, MazeStyleOptions } from "./options"
+import { CellOption, GridOptions, MazeStyleOptions } from "./options"
 
 export const DefaultGrid: GridOptions = {
     unit: {
@@ -22,37 +22,70 @@ export const defaultMazeOptions: MazeStyleOptions = {
     grid: DefaultGrid,
 }
 
-export const DefaultCellStyleTable: CellStyleTableOptions = {
+export const CellConfig: CellOption = {
     blank: {
-        mouse: {
-            normal: "#404969",
-            hover: "#404969",
-            mousedown: "#404969",
-            mouseup: "#404969",
+        style: {
+            mouse: {
+                normal: "#404969",
+                hover: "#404969",
+                mousedown: "#404969",
+                mouseup: "#404969",
+            },
         },
+        passable: true,
+        type: "blank",
+        cost: 1,
     },
     start: {
-        mouse: {
-            normal: "#bde4f4",
-            hover: "#bde4f4",
-            mousedown: "#bde4f4",
-            mouseup: "#bde4f4",
+        passable: false,
+        type: "start",
+        cost: Infinity,
+        style: {
+            mouse: {
+                normal: "#bde4f4",
+                hover: "#bde4f4",
+                mousedown: "#bde4f4",
+                mouseup: "#bde4f4",
+            },
         },
     },
     end: {
-        mouse: {
-            normal: "#e0fcff",
-            hover: "#e0fcff",
-            mousedown: "#e0fcff",
-            mouseup: "#e0fcff",
+        passable: true,
+        type: "end",
+        cost: 1,
+        style: {
+            mouse: {
+                normal: "#e0fcff",
+                hover: "#e0fcff",
+                mousedown: "#e0fcff",
+                mouseup: "#e0fcff",
+            },
         },
     },
     obstacle: {
-        mouse: {
-            normal: "#ff7f50",
-            hover: "#ff7f50",
-            mousedown: "#ff7f50",
-            mouseup: "#ff7f50",
+        passable: false,
+        type: "obstacle",
+        cost: Infinity,
+        style: {
+            mouse: {
+                normal: "#ff7f50",
+                hover: "#ff7f50",
+                mousedown: "#ff7f50",
+                mouseup: "#ff7f50",
+            },
+        },
+    },
+    path: {
+        passable: false,
+        type: "path",
+        cost: Infinity,
+        style: {
+            mouse: {
+                normal: "#E67E22",
+                hover: "#E67E22",
+                mousedown: "#E67E22",
+                mouseup: "#E67E22",
+            },
         },
     },
 }

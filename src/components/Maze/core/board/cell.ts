@@ -1,5 +1,5 @@
 import { CellStyleOptions } from "../options"
-import { DefaultCellStyleTable } from "../options.default"
+import { CellConfig } from "../options.default"
 import { Cell, CellType } from "../types"
 
 export class MazeCell implements Cell {
@@ -10,7 +10,7 @@ export class MazeCell implements Cell {
     public type: CellType
 
     /** 到达代价 */
-    public cost?: number | undefined
+    public cost: number | undefined
 
     /** 定义相关样式 */
     public style: CellStyleOptions
@@ -18,44 +18,48 @@ export class MazeCell implements Cell {
     /** 用于自身状态回溯, 回到上一次的状态 */
     private statuStack: Cell[]
 
-    constructor(passable?: boolean, type?: CellType) {
-        this.passable = passable ?? true
-        this.type = type ?? "blank"
-        this.style = DefaultCellStyleTable[this.type]
-        this.statuStack = [{ passable: this.passable, type: this.type, style: this.style }]
+    constructor(type: CellType) {
+        this.statuStack = []
+        const cell = CellConfig[type]
+        this.passable = cell.passable
+        this.type = cell.type
+        this.style = cell.style
+        this.cost = cell.cost
+        this.statuStack.push({ ...cell })
     }
 
-    public changeStatus(passable?: boolean, type?: CellType) {
-        if (!passable && !type) return this
-        this.passable = passable ?? this.passable
-        this.type = type ?? this.type
-        this.style = DefaultCellStyleTable[this.type]
-        this.statuStack.push({ passable: this.passable, type: this.type, style: this.style })
+    public to(type: CellType) {
+        const cell = CellConfig[type]
+        this.passable = cell.passable
+        this.type = cell.type
+        this.style = cell.style
+        this.cost = cell.cost
+        this.statuStack.push({ ...cell })
         return this
     }
 
     public static Start() {
-        return new MazeCell(false, "start")
+        return new MazeCell("start")
     }
 
     public static End() {
-        return new MazeCell(true, "end")
+        return new MazeCell("end")
     }
 
     public static Blank() {
-        return new MazeCell(true, "blank")
+        return new MazeCell("blank")
     }
 
     public static Obstacle() {
-        return new MazeCell(false, "obstacle")
+        return new MazeCell("obstacle")
     }
 
     public toBlank() {
-        return this.changeStatus(true, "blank")
+        return this.to("blank")
     }
 
     public toObstacle() {
-        return this.changeStatus(false, "obstacle")
+        return this.to("obstacle")
     }
 
     /**

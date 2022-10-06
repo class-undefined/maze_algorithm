@@ -1,7 +1,6 @@
 import { Graphics } from "pixi.js"
 import { hex2digital } from ".."
-import { CellStyleOptions } from "../../options"
-import { DefaultCellStyleTable } from "../../options.default"
+import { CellConfig } from "../../options.default"
 import { Cell } from "../../types"
 import { MazeHelper } from "../helper"
 type Pos = {
@@ -41,7 +40,7 @@ export class CellRect extends Rect {
     public size: Size
     public cell: Cell
     constructor(x: number, y: number, width: number, height: number, cell: Cell) {
-        const color = cell.style.mouse.normal ?? DefaultCellStyleTable.blank.mouse.normal
+        const color = cell.style.mouse.normal
         super(x, y, width, height, color)
         this.cell = cell
         this.color = color

@@ -1,7 +1,8 @@
 import { Graphics } from "pixi.js"
+import { MazeCell } from "./board/cell"
 import { CellStyleOptions } from "./options"
 
-export type CellType = "start" | "end" | "obstacle" | "blank"
+export type CellType = "start" | "end" | "obstacle" | "blank" | "path"
 
 export interface Cell {
     /** 是否可通过 */
@@ -15,7 +16,7 @@ export interface Cell {
 }
 
 export type GridCell = {
-    cell: Cell
+    cell: MazeCell
     graphic?: Graphics
 }
 

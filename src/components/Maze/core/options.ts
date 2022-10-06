@@ -1,4 +1,4 @@
-import { CellType } from "./types"
+import { Cell, CellType } from "./types"
 
 export type GridAxisOptions = {
     /** 刻度字体大小 */
@@ -52,4 +52,4 @@ export type CellStyleOptions = {
     mouse: InteractiveStyle
 }
 
-export type CellStyleTableOptions = Record<CellType, CellStyleOptions>
+export type CellOption = Record<CellType, Cell>

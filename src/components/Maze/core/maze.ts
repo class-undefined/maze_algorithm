@@ -1,5 +1,5 @@
 import { MazeStyleOptions } from "./options"
-import { DefaultCellStyleTable, defaultMazeOptions } from "./options.default"
+import { defaultMazeOptions } from "./options.default"
 import { Application, Container, TextStyle, Text, Graphics } from "pixi.js"
 import { hex2digital } from "./utils"
 import { CellRect, Rect } from "./utils/pixi/rect"
@@ -53,6 +53,12 @@ export class Maze {
     /** 绑定算法格点 */
     public bindEngine(engine: AlgorithmEngine) {
         this.algoEngine = engine
+        const { size } = this.options.grid
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                this.__drawRect(i, j)
+            }
+        }
         return this
     }
 
@@ -170,7 +176,12 @@ export class Maze {
         if (!this.algoEngine) throw "尚未载入格点搜索系统 Grid class"
         const pathBacktrack = this.algoEngine.search(source, target, type)
         const path = getPath(pathBacktrack, target)
+        const { board } = this.algoEngine!
+        board[source[0]][source[1]].cell.to("start")
+        board[target[0]][target[1]].cell.to("end")
         path?.forEach(([x, y]) => {
+            if (!["start", "end"].find(type => board[x][y].cell.type === type))
+                board[x][y].cell.to("path")
             this.__drawRect(x, y)
         })
     }

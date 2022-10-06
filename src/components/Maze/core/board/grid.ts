@@ -13,10 +13,12 @@ export class MazeGrid implements AlgorithmEngine {
         [-1, 0],
     ] // ↑→↓←
     constructor(private size: number) {
-        this.board = new Array<GridCell[]>(this.size)
+        this.board = new Array<GridCell[]>(size)
         for (let i = 0; i < this.size; i++) {
-            const col = new Array<GridCell>(this.size)
-            for (let j = 0; j < this.size; j++) col[j] = { cell: MazeCell.Blank() }
+            const col = new Array<GridCell>(size)
+            for (let j = 0; j < size; j++) {
+                col[j] = { cell: MazeCell.Blank() }
+            }
             this.board[i] = col
         }
     }
