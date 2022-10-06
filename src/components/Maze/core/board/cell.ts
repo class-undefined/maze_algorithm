@@ -2,6 +2,7 @@ import { Graphics } from "pixi.js"
 import { CellStyleOptions } from "../options"
 import { CellConfig } from "../options.default"
 import { Cell, CellType } from "../types"
+import { changeGraphicColor } from "../utils/pixi/graphic"
 
 export class MazeCell implements Cell {
     /** 是否可通过 */
@@ -16,10 +17,23 @@ export class MazeCell implements Cell {
     /** 定义相关样式 */
     public style: CellStyleOptions
 
-    public graphic?: Graphics
+    public _graphic?: Graphics
+
+    public boundingBox?: [number, number, number, number]
 
     /** 用于自身状态回溯, 回到上一次的状态 */
     private statuStack: Cell[]
+
+    public get graphic() {
+        return this._graphic
+    }
+
+    public set graphic(graphic: Graphics | undefined) {
+        this._graphic = graphic
+        if (graphic) {
+            // handler
+        }
+    }
 
     constructor(type: CellType, graphic?: Graphics) {
         this.statuStack = []
@@ -39,6 +53,10 @@ export class MazeCell implements Cell {
         this.style = cell.style
         this.cost = cell.cost
         this.statuStack.push({ ...cell })
+        if (this.graphic) {
+            // 由于事件侦听的是改变style的值, 而to会改变至对应type的style, 所以事件可以正常触发任意type的style样式
+            changeGraphicColor(this.graphic, ...this.boundingBox!, cell.style.mouse.normal)
+        }
         return this
     }
 

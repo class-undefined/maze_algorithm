@@ -88,6 +88,7 @@ export class Maze {
         const gridCell = this.algoEngine!.board[rowIndex][colIndex]
         const graphic = new CellRect(x, y, cellWidth, cellHeight, gridCell).toGraphics()
         gridCell.graphic = graphic
+        gridCell.boundingBox = [x, y, cellWidth, cellHeight]
         return graphic
     }
 
@@ -181,7 +182,6 @@ export class Maze {
         board[target[0]][target[1]].to("end")
         path?.forEach(([x, y]) => {
             if (!["start", "end"].find(type => board[x][y].type === type)) board[x][y].to("path")
-            this.__drawRect(x, y)
         })
     }
 }
