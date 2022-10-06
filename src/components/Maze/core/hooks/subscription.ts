@@ -5,15 +5,16 @@ type CellEvent = {
     click: MazeCell
 }
 /** cell单击事件池 */
-const cellEvent = mitt<CellEvent>()
-cellEvent.on("click", cell => {
+const cellClickEvent = mitt<CellEvent>()
+cellClickEvent.on("click", cell => {
     handlers.forEach(handler => setTimeout(() => handler(cell)))
 })
 
+/** 订阅`MazeCell`单击事件 */
 export const useSubscriptCellClick = (handler: (cell: MazeCell) => void) => {
     handlers.push(handler)
 }
 
 export const cellClicked = (cell: MazeCell) => {
-    cellEvent.emit("click", cell)
+    cellClickEvent.emit("click", cell)
 }
