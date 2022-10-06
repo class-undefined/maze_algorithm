@@ -1,4 +1,3 @@
-import { Graphics } from "pixi.js"
 import { MazeCell } from "./board/cell"
 import { CellStyleOptions } from "./options"
 

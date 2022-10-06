@@ -1,6 +1,5 @@
 import { Graphics } from "pixi.js"
 import { hex2digital } from ".."
-import { CellConfig } from "../../options.default"
 import { Cell } from "../../types"
 import { MazeHelper } from "../helper"
 import { changeGraphicColor } from "./graphic"

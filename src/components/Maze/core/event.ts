@@ -1,4 +1,4 @@
-import { DisplayObject, Graphics } from "pixi.js"
+import { DisplayObject } from "pixi.js"
 import { MazeCell } from "./board/cell"
 import { Maze } from "./maze"
 
