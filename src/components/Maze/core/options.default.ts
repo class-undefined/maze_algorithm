@@ -22,6 +22,7 @@ export const defaultMazeOptions: MazeStyleOptions = {
     grid: DefaultGrid,
 }
 
+
 export const CellConfig: CellOption = {
     blank: {
         style: {
